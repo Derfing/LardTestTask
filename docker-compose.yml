@@ -8,7 +8,7 @@ services:
             - .:/var/www
         networks:
             - laravel
-        entrypoint: ["sh", "-c", "php artisan key:generate && php artisan migrate --force && php artisan db:seed --force && php-fpm"]
+        entrypoint: ["sh", "-c", "if [ ! -f .env ]; then cp .env.example .env; fi && php artisan cache:clear && php artisan key:generate && php artisan migrate --force && php artisan db:seed && php-fpm"]
 
     web:
         image: nginx:latest
@@ -24,7 +24,7 @@ services:
         networks:
             - laravel
 
-    mysql:
+    db:
         image: mysql:8.0
         container_name: mysql_db
         restart: unless-stopped
